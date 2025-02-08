@@ -22,11 +22,13 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from dal import ToDoDAL, ListSummary, ToDoList
 from dotenv import load_dotenv
 
-load_dotenv(r"C:\Users\damil\farmstack\.env")
+load_dotenv(r"C:\Users\damil\AIgenda\.env")
 COLLECTION_NAME = "todolists"
 USERS_NAME = "walletaddresses"
 # os.environ['MONGODB_URI'] = os.environ.get("MONGODB_URI")
-os.environ['GOOGLE_API_KEY'] = os.environ.get("GOOGLE_API_KEY") 
+os.environ['GOOGLE_API_KEY'] = os.environ.get("GOOGLE_API_KEY")
+os.environ["OPENAI_API_KEY"] = os.environ.get("OPENAI_API_KEY")
+MONGO_DB_URI = os.environ.get("MONGODB_URI")
 DEBUG = os.environ.get("DEBUG", "").strip().lower() in {"i", "true", "on", "yes"}
 
 
@@ -34,7 +36,7 @@ DEBUG = os.environ.get("DEBUG", "").strip().lower() in {"i", "true", "on", "yes"
 async def lifespan(app: FastAPI):
     # Startup:
     client = AsyncIOMotorClient(
-        "mongodb+srv://dami:dami@todotest.u9e8k.mongodb.net/todolists?retryWrites=true&w=majority&appName=todotest"
+        MONGO_DB_URI
     )
     database = client.get_default_database()
 
@@ -238,13 +240,11 @@ async def set_checked_state(list_id: str, update: ToDoItemUpdate) -> ToDoList:
 async def create_smart_suggestion(todoitems):
     todo = [f"item: {item.label}, done: {item.checked}\n" for item in todoitems]
     todo = " ".join(todo)
-    system_prompt = """You are a helpful assistant that helps users with their todo lists. 
-    You are to provide helpful suggestions to help a user complete their tasks for the day. 
-    Todo lists can be provided as pure text or as an image.
+    system_prompt = """You are a helpful, kind and homely assistant that helps users with their todo lists. 
+    You are to provide useful suggestions and a guide to help a user complete their tasks for the day. You are to provide the user with useful responses and strategies to complete the todolists provided to you.
     """
     model = ChatOpenAI(
-        model="gpt-4o",
-        api_key="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",
+        model="gpt-4o"
     )
 
     # Text-only input
