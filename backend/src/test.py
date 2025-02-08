@@ -83,7 +83,7 @@ class UserInDB(BaseModel):
 
 class UserCreate(BaseModel):
     email: EmailStr
-    wallet_address: Optional[str] = None
+    wallet_address: Optional[str] = ''
     is_google_user: bool = False
 
 
@@ -128,9 +128,10 @@ async def verify_google_token(token: str):
         if not user:
             user_dict = {
                 'email':email,
+                "wallet_address":'',
                 "is_google_user": True
             }
-            await app.todo_dal.users_collection.insert_one(
+            await app.todo_dal.create_user(
                 user_dict
             )
         return True
