@@ -94,7 +94,7 @@ class UserInDB(BaseModel):
 
 
 class UserCreate(BaseModel):
-    email: Optional[EmailStr] = None
+    email: Optional[EmailStr]
     wallet_address: Optional[str] = None
     user_id: Optional[str] = None
     is_google_user: bool = False
@@ -155,7 +155,7 @@ async def verify_google_token(token: str):
         user = await app.todo_dal.get_user(user)
         if not user:
             user = User(
-                wallet_address='',
+                wallet_address=' ',
                 email=email,
                 is_google_user=True
             )

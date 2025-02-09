@@ -123,7 +123,10 @@ class ToDoDAL:
             doc = await self._users_collection.find_one(
                 {"email": user.email}, session=session
             )
-            return doc['email']
+            return User(
+                wallet_address=doc.get("wallet_address"),
+                user_id=str(doc.get("_id")),
+                email=doc.get("email"))
         elif user.user_id:
             doc = await self._users_collection.find_one(
                 {"_id": user.user_id}, session=session
