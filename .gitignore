@@ -1,3 +1,2 @@
 .env
 nginx/
-backend/src/test.py

@@ -23,7 +23,7 @@ from dal import ToDoDAL, ListSummary, ToDoList
 from dotenv import load_dotenv
 
 load_dotenv(r"C:\Users\damil\AIgenda\.env")
-COLLECTION_NAME = "todolists"
+COLLECTION_NAME = "new_todolists"
 USERS_NAME = "walletaddresses"
 # os.environ['MONGODB_URI'] = os.environ.get("MONGODB_URI")
 os.environ['GOOGLE_API_KEY'] = os.environ.get("GOOGLE_API_KEY")
@@ -306,100 +306,3 @@ def main(argv=sys.argv[1:]):
 
 if __name__ == "__main__":
     main()
-
-
-# @app.get("/api/lists")
-# async def get_all_lists() -> list[ListSummary]:
-#     return [i async for i in app.todo_dal.list_todo_lists()]
-
-
-# class NewList(BaseModel):
-#     name: str
-
-
-# class NewListResponse(BaseModel):
-#     id: str
-#     name: str
-
-
-# @app.post("/api/lists", status_code=status.HTTP_201_CREATED)
-# async def create_todo_list(new_list: NewList) -> NewListResponse:
-#     return NewListResponse(
-#         id=await app.todo_dal.create_todo_list(new_list.name),
-#         name=new_list.name,
-#     )
-
-
-# @app.get("/api/lists/{list_id}")
-# async def get_list(list_id: str) -> ToDoList:
-#     """Get a single to-do list"""
-#     result = await app.todo_dal.get_todo_list(list_id)
-#     if result is None:
-#         return JSONResponse(status_code=404, content={"detail": "To-Do List not found"})
-
-
-# @app.delete("/api/lists/{list_id}")
-# async def delete_list(list_id: str) -> bool:
-#     return await app.todo_dal.delete_todo_list(list_id)
-
-
-# class NewItem(BaseModel):
-#     label: str
-
-
-# class NewItemResponse(BaseModel):
-#     id: str
-#     label: str
-
-
-# @app.post(
-#     "/api/lists/{list_id}/items/",
-#     status_code=status.HTTP_201_CREATED,
-# )
-# async def create_item(list_id: str, new_item: NewItem) -> ToDoList:
-#     print(f"Received payload: {json.dumps(new_item.dict())}")
-#     result = await app.todo_dal.create_item(list_id, new_item.label)
-#     if result is None:
-#         print("yeaaa")
-#     return result
-
-
-# @app.delete("/api/lists/{list_id}/items/{item_id}")
-# async def delete_item(list_id: str, item_id: str) -> ToDoList:
-#     return await app.todo_dal.delete_item(list_id, item_id)
-
-
-# class ToDoItemUpdate(BaseModel):
-#     item_id: str
-#     checked_state: bool
-
-
-# @app.patch("/api/lists/{list_id}/checked_state")
-# async def set_checked_state(list_id: str, update: ToDoItemUpdate) -> ToDoList:
-#     return await app.todo_dal.set_checked_state(
-#         list_id, update.item_id, update.checked_state
-#     )
-
-
-# class DummyResponse(BaseModel):
-#     id: str
-#     when: datetime
-
-
-# @app.get("/api/dummy")
-# async def get_dummy() -> DummyResponse:
-#     return DummyResponse(
-#         id=str(ObjectId()),
-#         when=datetime.now(),
-#     )
-
-
-# def main(argv=sys.argv[1:]):
-#     try:
-#         uvicorn.run("server:app", host="0.0.0.0", port=3001, reload=DEBUG)
-#     except KeyboardInterrupt:
-#         pass
-
-
-# if __name__ == "__main__":
-#     main()
