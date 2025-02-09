@@ -3,7 +3,6 @@ from datetime import datetime
 import os
 import sys
 from typing import Optional, List
-
 from fastapi.middleware.cors import CORSMiddleware
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -17,6 +16,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
+import logging
 
 
 from test_dal import ToDoDAL, ListSummary, ToDoList
@@ -70,6 +70,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+logger = logging.getLogger("app")
+logger.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+
+logger.addHandler(console_handler)
 
 
 class User(BaseModel):
@@ -133,10 +142,10 @@ async def register_user(user: UserCreate):
 async def verify_google_token(token: str):
     try:
         idinfo = id_token.verify_oauth2_token(
-            token,
-            requests.Request(),
-            GOOGLE_CLIENT_ID
-        )
+                id_token=token,
+                request=requests.Request(),
+                audience=GOOGLE_CLIENT_ID
+            )
         email = idinfo['email']
         user = User(
             wallet_address='',
@@ -168,7 +177,7 @@ async def register(user: UserCreate):
 
 @app.post("/api/users/auth/google", status_code=status.HTTP_201_CREATED)
 async def get_google_login(token: Token):
-    return await verify_google_token(token)
+    return await verify_google_token(token.token)
 
 
 # @app.post("/api/users/", status_code=status.HTTP_201_CREATED)
