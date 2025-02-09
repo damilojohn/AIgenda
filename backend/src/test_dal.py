@@ -308,30 +308,6 @@ class ToDoDAL:
             return ToDoList.from_doc(result)
         return None
 
-
-    # async def create_item(
-    #     self,
-    #     id: str | ObjectId,
-    #     label: str,
-    #     session=None,
-    # ) -> ToDoList | None:
-    #     result = await self._todo_collection.find_one_and_update(
-    #         {"_id": ObjectId(id)},
-    #         {
-    #             "$push": {
-    #                 "items": {
-    #                     "id": uuid4().hex,
-    #                     "label": label,
-    #                     "checked": False,
-    #                 }
-    #             }
-    #         },
-    #         session=session,
-    #         return_document=ReturnDocument.AFTER,
-    #     )
-    #     if result:
-    #         return ToDoList.from_doc(result)
-
     async def set_checked_state(
         self,
         list_id: str | ObjectId,
@@ -347,7 +323,7 @@ class ToDoDAL:
         )
         if result:
             return ToDoList.from_doc(result)
-    
+
     async def delete_item(
         self,
         user_id: str,

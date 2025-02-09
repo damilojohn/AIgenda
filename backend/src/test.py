@@ -215,9 +215,9 @@ async def get_user(identifier: str) -> User:
             detail="User not found with provided email or wallet address"
         )
     result = User(
-        user_id=user['_id'],
-        email=user['email'],
-        wallet_address=user['wallet_address']
+        user_id=user.user_id,
+        email=user.email,
+        wallet_address=user.wallet_address
     )
     return result
 
