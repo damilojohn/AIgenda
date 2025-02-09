@@ -132,6 +132,11 @@ class ToDoDAL:
         # Query user by wallet address
         return await self._users_collection.find_one(
             {"wallet_address": wallet_address})
+    async def get_user_by_id(self,
+                             id: str) -> Union[User, None]:
+        return await self._users_collection.find_one(
+            {"_id": id}
+        )
 
     async def list_todo_lists(self, session=None):
         async for doc in self._todo_collection.find(

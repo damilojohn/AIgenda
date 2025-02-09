@@ -198,12 +198,15 @@ async def get_user(identifier: str) -> User:
         if not user:
             # If not a valid email, treat as wallet address
             user = await app.todo_dal.get_user_by_wallet(identifier)
-    except Exception:
+            if not user:
+                user = await app.todo_dal.get_user_by_id(identifier)
+    except Exception as e:
+        print(e)
         raise HTTPException(
+
             status_code=401,
             detail="bad request"
-        )
-    
+        )  
     if not user:
         raise HTTPException(
             status_code=404,
