@@ -61,7 +61,7 @@ class User(BaseModel):
     def from_doc(doc):
         return User(
             wallet_address=doc['wallet_address'],
-            user_id=doc['_id'],
+            user_id=str(doc['_id']),
             email=doc['email']
         )
 
@@ -115,28 +115,39 @@ class ToDoDAL:
 
     async def get_user(self, user: User, session=None):
         if user.wallet_address:
-            return await self._users_collection.find_one(
+            doc = await self._users_collection.find_one(
                 {"wallet_address": user.wallet_address}, session=session
             )
+            return doc['wallet_address']
         elif user.email:
-            return await self._users_collection.find_one(
+            doc = await self._users_collection.find_one(
                 {"email": user.email}, session=session
             )
+            return doc['email']
+        elif user.user_id:
+            doc = await self._users_collection.find_one(
+                {"_id": user.user_id}, session=session
+            )
+            return doc
     
     async def get_user_by_email(self, email: EmailStr) -> Union[User, None]:
         # Query user by email
-        return await self._users_collection.find_one({"email": email})
-    
+        doc = await self._users_collection.find_one({"email": email})
+        return doc
+   
     async def get_user_by_wallet(self,
                                  wallet_address: str) -> Union[User, None]:
         # Query user by wallet address
-        return await self._users_collection.find_one(
+        doc = await self._users_collection.find_one(
             {"wallet_address": wallet_address})
+        return doc
+
     async def get_user_by_id(self,
                              id: str) -> Union[User, None]:
-        return await self._users_collection.find_one(
+        doc = await self._users_collection.find_one(
             {"_id": id}
         )
+        return User.from_doc(doc)
 
     async def list_todo_lists(self, session=None):
         async for doc in self._todo_collection.find(

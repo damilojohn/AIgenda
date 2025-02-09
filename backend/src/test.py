@@ -94,9 +94,9 @@ class UserInDB(BaseModel):
 
 
 class UserCreate(BaseModel):
-    email: Optional[EmailStr] = ' '
-    wallet_address: Optional[str] = ' '
-    user_id: Optional[str] = ' '
+    email: Optional[EmailStr] = None
+    wallet_address: Optional[str] = None
+    user_id: Optional[str] = None
     is_google_user: bool = False
 
 
@@ -193,20 +193,22 @@ async def get_google_login(token: Token):
 @app.get("/api/users/{identifier}/")
 async def get_user(identifier: str) -> User:
     # Check if the identifier is an email
-    try:
-        user = await app.todo_dal.get_user_by_email(identifier)
-        if not user:
-            # If not a valid email, treat as wallet address
-            user = await app.todo_dal.get_user_by_wallet(identifier)
-            if not user:
-                user = await app.todo_dal.get_user_by_id(identifier)
-    except Exception as e:
-        print(e)
-        raise HTTPException(
+    # try:
 
-            status_code=401,
-            detail="bad request"
-        )  
+    user = await app.todo_dal.get_user_by_email(identifier)
+    if not user:
+        # If not a valid email, treat as wallet address
+        user = await app.todo_dal.get_user_by_wallet(identifier)
+        if not user:
+            user = await app.todo_dal.get_user_by_id(identifier)
+    # except Exception as e:
+    
+    #     print(e)
+    #     raise HTTPException(
+
+    #         status_code=401,
+    #         detail="bad request"
+    #     )  
     if not user:
         raise HTTPException(
             status_code=404,
