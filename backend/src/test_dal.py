@@ -51,8 +51,8 @@ class ToDoListItem(BaseModel):
 
 
 class User(BaseModel):
-    user_id: str
-    wallet_address: str
+    user_id: str = " "
+    wallet_address: str = ' '
     email: EmailStr
     is_google_user: bool = False
 

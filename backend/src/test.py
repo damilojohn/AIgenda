@@ -82,8 +82,8 @@ logger.addHandler(console_handler)
 
 
 class User(BaseModel):
-    wallet_address: str
-    email: EmailStr
+    wallet_address: str = ' '
+    email: EmailStr = ' '
     user_id: str = ' '
 
 
@@ -148,7 +148,7 @@ async def verify_google_token(token: str):
             )
         email = idinfo['email']
         user = User(
-            wallet_address='',
+            wallet_address=' ',
             email=email,
             is_google_user=True
         )
