@@ -114,6 +114,12 @@ class ToDoDAL:
             return None
 
     async def get_user(self, user: User, session=None):
+        if user.user_id:
+            doc = await self._users_collection.find_one(
+                {"_id": user.user_id}, session=session
+            )
+            if doc:
+                return doc
         if not user.wallet_address == " ":
             doc = await self._users_collection.find_one(
                 {"wallet_address": user.wallet_address}, session=session
@@ -129,12 +135,6 @@ class ToDoDAL:
                     wallet_address=doc.get("wallet_address"),
                     user_id=str(doc.get("_id")),
                     email=doc.get("email"))
-        if user.user_id:
-            doc = await self._users_collection.find_one(
-                {"_id": user.user_id}, session=session
-            )
-            if doc:
-                return doc
     
     async def get_user_by_email(self, email: EmailStr) -> Union[User, None]:
         # Query user by email

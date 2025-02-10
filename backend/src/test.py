@@ -194,13 +194,12 @@ async def get_google_login(token: Token):
 async def get_user(identifier: str) -> User:
     # Check if the identifier is an email
     # try:
-
-    user = await app.todo_dal.get_user_by_email(identifier)
+    user = await app.todo_dal.get_user_by_id(identifier)
     if not user:
         # If not a valid email, treat as wallet address
-        user = await app.todo_dal.get_user_by_wallet(identifier)
+        user = await app.todo_dal.get_user_by_email(identifier)
         if not user:
-            user = await app.todo_dal.get_user_by_id(identifier)
+            user = await app.todo_dal.get_user_by_wallet(identifier)
     # except Exception as e:
     
     #     print(e)
