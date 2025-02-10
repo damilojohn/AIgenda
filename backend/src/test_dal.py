@@ -114,7 +114,7 @@ class ToDoDAL:
             return None
 
     async def get_user(self, user: User, session=None):
-        if user.wallet_address:
+        if not user.wallet_address == " ":
             doc = await self._users_collection.find_one(
                 {"wallet_address": user.wallet_address}, session=session
             )
