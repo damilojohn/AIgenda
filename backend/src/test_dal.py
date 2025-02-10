@@ -139,21 +139,25 @@ class ToDoDAL:
     async def get_user_by_email(self, email: EmailStr) -> Union[User, None]:
         # Query user by email
         doc = await self._users_collection.find_one({"email": email})
-        return doc
+        if doc:
+
+            return doc
    
     async def get_user_by_wallet(self,
                                  wallet_address: str) -> Union[User, None]:
         # Query user by wallet address
         doc = await self._users_collection.find_one(
             {"wallet_address": wallet_address})
-        return doc
+        if doc:
+            return doc
 
     async def get_user_by_id(self,
                              id: str) -> Union[User, None]:
         doc = await self._users_collection.find_one(
             {"_id": id}
         )
-        return User.from_doc(doc)
+        if doc:
+            return User.from_doc(doc)
 
     async def list_todo_lists(self, session=None):
         async for doc in self._todo_collection.find(
@@ -213,7 +217,8 @@ class ToDoDAL:
             {"_id": ObjectId(id)},
             session=session,
         )
-        return ToDoList.from_doc(doc)
+        if doc:
+            return ToDoList.from_doc(doc)
 
     #   async def delete_todo_list(self, id: str | ObjectId, session=None) -> bool:
     #       response = await self._todo_collection.delete_one(
