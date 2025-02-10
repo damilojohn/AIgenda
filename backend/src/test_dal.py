@@ -5,7 +5,7 @@ from pymongo.errors import DuplicateKeyError
 import datetime
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ValidationError
 
 from uuid import uuid4
 
@@ -125,7 +125,10 @@ class ToDoDAL:
                 {"wallet_address": user.wallet_address}, session=session
             )
             if doc:
-                return doc['wallet_address']
+                return User(
+                    wallet_address=doc.get("wallet_address"),
+                    user_id=str(doc.get("_id")),
+                    email=doc.get("email"))
         if user.email:
             doc = await self._users_collection.find_one(
                 {"email": user.email}, session=session
@@ -138,18 +141,35 @@ class ToDoDAL:
     
     async def get_user_by_email(self, email: EmailStr) -> Union[User, None]:
         # Query user by email
-        doc = await self._users_collection.find_one({"email": email})
-        if doc:
+        if self.validate_email(email):
+            doc = await self._users_collection.find_one({"email": email})
+            if doc:
+                return User(
+                        wallet_address=doc.get("wallet_address"),
+                        user_id=doc.get("_id"),
+                        email=doc.get("email")
+                    )
+        else:
+            return None
 
-            return doc
-   
+    async def validate_email(self, email):
+        try:
+            EmailStr.validate(email)
+            return True
+        except ValidationError:
+            return False
+
     async def get_user_by_wallet(self,
                                  wallet_address: str) -> Union[User, None]:
         # Query user by wallet address
         doc = await self._users_collection.find_one(
             {"wallet_address": wallet_address})
         if doc:
-            return doc
+            return User(
+                wallet_address=doc.get("wallet_address"),
+                user_id=doc.get("_id"),
+                email=doc.get("email")
+            )
 
     async def get_user_by_id(self,
                              id: str) -> Union[User, None]:

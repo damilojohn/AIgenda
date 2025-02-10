@@ -199,7 +199,7 @@ async def get_user(identifier: str) -> User:
         # If not a valid email, treat as wallet address
         user = await app.todo_dal.get_user_by_email(identifier)
         if not user:
-            user = await app.todo_dal.get_user_by_wallet(identifier)
+            user = await app.todo_dal.get_user_by_wallet_address(identifier)
     # except Exception as e:
     
     #     print(e)
