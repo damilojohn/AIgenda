@@ -1,1 +1,1 @@
-Backend for ToDo List app
+Python backend for an AI-to-do list app
